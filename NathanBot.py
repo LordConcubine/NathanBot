@@ -1,18 +1,19 @@
-from nextcord.ext import commands
 import random
-import nextcord
-from nextcord import Intents
-from nextcord.utils import get
+import discord
+#from discord import commands
+#from discord import Intents
+from discord.utils import get
 from googleapiclient.discovery import build
 from gtts import gTTS
-from nextcord import FFmpegPCMAudio
-from nextcord import FFmpegOpusAudio
+#from discord import FFmpegPCMAudio
+#from discord import FFmpegOpusAudio
 import asyncio
-from nextcord import Interaction
-from nextcord import File, ButtonStyle, Embed, Color, SelectOption
-from nextcord.ui import Button, View, Select
+from discord import Interaction
+from discord import File, ButtonStyle, Embed, Color, SelectOption
+from discord.ui import Button, View, Select
 
 
+token = 'MTAxNTU2NTE3NTEwMjkxNDU4MA.G-690G._sx8bb-uV4EO6Ec5CEZMOcuNl6qKjuTIoOIVds'
 insults = ["You look like you were draw with my left hand",\
            "Quit being a spherical dumbass, no matter how you look at it you're a dumbass",\
            "You live in your mom's basement you antisocial fuck",\
@@ -23,16 +24,16 @@ reaction_list = ['\U0001F600', '\U0001F601', '\U0001F602', '\U0001F603', '\U0001
                  '\U0001F615', '\U0001F616', '\U0001F617', '\U0001F618', '\U0001F619']
 
 
-token = 'MTAxNTU2NTE3NTEwMjkxNDU4MA.GVNSdC.36c5B9OAw9UZJFwzjk7KChDdPWs875fwItvob8'
-#needed_intents = discord.Intents.default()
+
+#intents = discord.Intents.all()
 #client = commands.Bot(command_prefix = '!')
 #client = commands.Bot(command_prefix = '-_-', intents = needed_intents)
 #client = commands.Bot(command_prefix = '-_-', intents=discord.Intents.all())
-#client = discord.Client(intents=discord.Intents.default())
-api_key = 'AIzaSyCUV6iOdlAhJ7tHZmSOlbwM6jHV29DHEp0'
-intents = Intents.all()
-intents.message_content = True
-bot = commands.Bot(command_prefix = 'n/', intents = intents)
+bot = discord.Client(intents = discord.Intents.all())
+api_key = 'MTAxNTU2NTE3NTEwMjkxNDU4MA.G4Um2I.ZgrHnLk-K542BpgWDsavE7H6zWqB8dT9MtxnHY'
+#intents = Intents.all()
+#intents.message_content = True
+#bot = commands.Bot(command_prefix = 'n/', intents = intents)
 
 @bot.event
 async def on_ready():
@@ -50,9 +51,9 @@ async def on_message(message):
     
     if user_message.lower() == 'n/ping':
         latency = round(bot.latency * 1000)
-        embed = nextcord.Embed(
+        embed = discord.Embed(
             title = 'Pong! Latency = {}ms'.format(latency),
-            colour = nextcord.Color.from_rgb(220,220,220)
+            colour = discord.Color.from_rgb(220,220,220)
             )
         #embed.set_thumbnail(url = 'https://cdn.discordapp.com/attachments/1015586455126552638/1017733351769124975/unknown.png')
         await message.channel.send(embed = embed)   #f'Pong! latency = {round(bot.latency * 1000)}ms')
@@ -74,10 +75,10 @@ async def on_message(message):
 
     if user_message.lower() == 'n/echo':
         await message.delete()
-        embedVar = nextcord.Embed(
+        embedVar = discord.Embed(
             title = 'What would you like for me to repeat?',
             description = 'This request expires in 1 minute',
-            colour = nextcord.Color.from_rgb(220,220,220)
+            colour = discord.Color.from_rgb(220,220,220)
         )
         #embedVar.set_thumbnail(url = 'https://cdn.discordapp.com/attachments/1017087262871273504/1017732397028098048/unknown.png')
         sent = await message.channel.send(embed = embedVar)
@@ -101,9 +102,9 @@ async def on_message(message):
         resource = build('customsearch', 'v1', developerKey = api_key).cse()
         result = resource.list(q = f'{user_message[13:1000]}', cx = 'a0c1f21fe29424ae9', searchType = 'image').execute()
         url = result['items'][number]['link']
-        embed = nextcord.Embed(
+        embed = discord.Embed(
             title = 'Here is your image. Title: {}'.format(user_message[12:1000]),
-            colour = nextcord.Color.from_rgb(220,220,220)
+            colour = discord.Color.from_rgb(220,220,220)
             )
         member = message.author
         memberAvatar = member.avatar.url
@@ -136,7 +137,7 @@ async def on_message(message):
             #vc.play(nextcord.FFmpegPCMAudio('tts-audio.mp3'))
             #source = FFmpegPCMAudio('tts-audio.mp3')
             #player = voice.play(source)
-            vc.play(nextcord.FFmpegPCMAudio(executable='C:/path/ffmpeg.exe', source = FFmpegOpusAudio("tts-audio.mp3"), method = 'fallback'))
+            vc.play(discord.FFmpegPCMAudio(executable='C:/path/ffmpeg.exe', source = FFmpegOpusAudio("tts-audio.mp3"), method = 'fallback'))
         else:
             await message.channel.send('You need to be in a voicecall to run this command')
 
@@ -162,10 +163,10 @@ async def on_message(message):
         if len(message_list) > 20:
             await message.channel.send(f'Too many poll options (max 20)')
         else:
-            embed = nextcord.Embed(
+            embed = discord.Embed(
                 title = 'Poll Title:  ' + title_list[0],
                 description = 'React with emojis to specify choice',
-                colour = nextcord.Color.from_rgb(220,220,220),
+                colour = discord.Color.from_rgb(220,220,220),
                 timestamp = message.created_at
                 )
             
@@ -190,31 +191,31 @@ async def on_message(message):
         
     if user_message.lower() == 'n/help': 
         
-        pingembed = nextcord.Embed(
+        pingembed = discord.Embed(
             title = 'Ping Command',
             description = 'Will send back a message to show you your latency',
-            colour = nextcord.Color.from_rgb(220,220,220)
+            colour = discord.Color.from_rgb(220,220,220)
             )
         pingembed.set_image(url = 'https://media.discordapp.net/attachments/1017087262871273504/1017727769477656637/Ping.png')
 
-        echoembed = nextcord.Embed(
+        echoembed = discord.Embed(
             title = 'Echo Command',
             description = 'Asks for your message, input your message and it will be removed, the bot will then send in your message',
-            colour = nextcord.Color.from_rgb(220,220,220)
+            colour = discord.Color.from_rgb(220,220,220)
             )
         echoembed.set_image(url = 'https://cdn.discordapp.com/attachments/1017087262871273504/1017724765311606794/unknown.png')
 
-        picsearchembed = nextcord.Embed(
+        picsearchembed = discord.Embed(
             title = 'Picsearch Command',
             description = 'Searches for the image in google and sends it back',
-            colour = nextcord.Color.from_rgb(220,220,220)
+            colour = discord.Color.from_rgb(220,220,220)
             )
         picsearchembed.set_image(url = 'https://media.discordapp.net/attachments/1017087262871273504/1017727769959989288/Picsearch.png?width=530&height=673')
 
-        pollembed = nextcord.Embed(
+        pollembed = discord.Embed(
             title = 'Poll Command',
             description = 'Creates a poll, write phrases with commas in between, first message will be the title, the others will be the poll options',
-            colour = nextcord.Color.from_rgb(220,220,220)
+            colour = discord.Color.from_rgb(220,220,220)
             )
         pollembed.set_image(url = 'https://media.discordapp.net/attachments/1017087262871273504/1017727769695752233/Poll.png')
         
@@ -238,9 +239,9 @@ async def on_message(message):
         dropdown.callback = dropdown_callback
         myview = View(timeout = 180)
         myview.add_item(dropdown)
-        embed = nextcord.Embed(
+        embed = discord.Embed(
             title = 'Welcome to the help menu. You may select 1 or multiple options',
-            colour = nextcord.Color.from_rgb(220,220,220)
+            colour = discord.Color.from_rgb(220,220,220)
             )
         embed.set_thumbnail(url = 'https://media.discordapp.net/attachments/1017087262871273504/1017728726890450995/unknown.png')
         embed.add_field(name = 'Contact LordConcubine #0186 if you need human', value = '=' * 45, inline = True)
