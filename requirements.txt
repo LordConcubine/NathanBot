@@ -1,3 +1,4 @@
+git+https://github.com/Rapptz/discord.py@write
 discord==2.0.1
 gtts
 googleapiclient
